@@ -2,8 +2,12 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+#include "Shader.h"
+
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 800
+
+using std::string;
 
 // a callback function that is called everytime the window is resized
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
@@ -16,8 +20,8 @@ void process_inputs(GLFWwindow *window) {
     }
 }
 
-GLFWwindow *init() {
-    std::cout << "Hello World!" << std::endl;
+GLFWwindow *initialize() {
+    std::cout << "Hello OpenGL!" << std::endl;
 
     // init GLFW
     glfwInit();
@@ -29,7 +33,7 @@ GLFWwindow *init() {
 
     // create the window object
     GLFWwindow *window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT,
-                                    "Starry Dream", nullptr, nullptr);
+                                          "LearnOpenGL", nullptr, nullptr);
     if (window == nullptr) {
         glfwTerminate();
         throw std::runtime_error("Failed to create GLFWwindow object!");
@@ -53,7 +57,36 @@ GLFWwindow *init() {
 
 int main() {
 
-    auto *window = init();
+    auto *window = initialize();
+
+    Shader shader("vertex_shader.glsl", "fragment_shader.glsl");
+
+    // create a vertex array object to store our VBOs
+    unsigned vao_id;
+    glGenVertexArrays(1, &vao_id);
+    glBindVertexArray(vao_id);
+
+    // vertex data and VBO
+    float vertices[] = {
+            0.0, 0.5, 0.0, // TOP
+            -0.5, -0.5, 0.0, // LEFT
+            0.5, -0.5, 0.0 // RIGHT
+    };
+    // our first vertex buffer object
+    unsigned vbo_id;
+    glGenBuffers(1, &vbo_id);
+    // OpenGL has many buffer types, and VBO has GL_ARRAY_BUFFER as its type
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+    // copy the previously defined vertex data to the buffer's memory
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    // right now, we have the data and a program to process the data, we still need a way to
+    // pass the data into the program
+    // location, size of vertex attributes, types of the data, normalize?, stride, offset
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 
     // the render loop
     while (!glfwWindowShouldClose(window)) {
@@ -62,6 +95,11 @@ int main() {
 
         glClearColor(0.2F, 0.3F, 0.3F, 1.0F);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        shader.use();
+        glBindVertexArray(vao_id);
+        // primitive, the starting index of the vertex array, number of vertices
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         // swap the double buffer
         glfwSwapBuffers(window);
