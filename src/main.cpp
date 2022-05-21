@@ -2,8 +2,10 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <cmath>
+#include <stb_image.h>
 
 #include "Shader.h"
+#include "Texture2D.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 800
@@ -68,7 +70,12 @@ int main() {
 
     auto *window = initialize();
 
-    Shader shader("vertex_shader.glsl", "fragment_shader.glsl");
+    // texture
+    Texture2D texture1("resource/texture/grass_block_side.png");
+    Texture2D texture2("resource/texture/oak_planks.png");
+
+    Shader shader("resource/shader/vertex_shader.glsl",
+                  "resource/shader/fragment_shader.glsl");
 
     // create a vertex array object to store our VBOs
     unsigned vao_id;
@@ -77,10 +84,11 @@ int main() {
 
     // vertex data and VBO
     float vertices[] = {
-            -0.5, -0.5, 0.0, // left bottom
-            -0.5, 0.5, 0.0, // left top
-            0.5, 0.5, 0.0, // right top
-            0.5, -0.5, 0.0 // right bottom
+            // 3 positions,                2 tex coords
+            -0.5, -0.5, 0.0, 0.0, 0.0, // left bottom
+            -0.5, 0.5, 0.0, 0.0, 1.0,// left top
+            0.5, 0.5, 0.0, 1.0, 1.0,// right top
+            0.5, -0.5, 0.0, 1.0, 0.0,// right bottom
     };
     unsigned indices[] = {
             0, 1, 2,
@@ -96,8 +104,10 @@ int main() {
     // right now, we have the data and a program to process the data, we still need a way to
     // pass the data into the program
     // location, size of vertex attributes, types of the data, normalize?, stride, offset
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), static_cast<void *>(0));
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     unsigned ebo_id;
@@ -107,6 +117,10 @@ int main() {
 
     glBindVertexArray(0);
 
+    shader.use();
+    shader.set_uniform("texture0", 0);
+    shader.set_uniform("texture1", 1);
+
     // the render loop
     while (!glfwWindowShouldClose(window)) {
         // process inputs
@@ -115,11 +129,9 @@ int main() {
         glClearColor(0.2F, 0.3F, 0.3F, 1.0F);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        shader.use();
-        double time = glfwGetTime();
-        auto green_value = static_cast<float>((sin(time) + 1) / 2);
-        shader.set_uniform("green_value", green_value);
-
+        shader.use();;
+        texture1.bind(GL_TEXTURE0);
+        texture2.bind(GL_TEXTURE1);
         glBindVertexArray(vao_id);
         // primitive, the starting index of the vertex array, number of vertices
         // glDrawArrays(GL_TRIANGLES, 0, 6);

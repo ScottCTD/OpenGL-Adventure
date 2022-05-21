@@ -19,7 +19,7 @@ class Shader {
 private:
     unsigned vertex_shader_id;
     unsigned fragment_shader_id;
-    unsigned program_id;
+    unsigned id;
 
     void init_shader(unsigned shader_id, const string &source) const;
 

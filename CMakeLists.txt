@@ -5,9 +5,14 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY build)
 
 add_subdirectory(lib)
+add_executable(LearnOpenGL src/main.cpp src/Shader.cpp src/Shader.h src/Texture2D.cpp src/Texture2D.h)
+target_link_libraries(LearnOpenGL PUBLIC opengl32 glfw glad stb)
 
-add_executable(LearnOpenGL src/main.cpp src/Shader.cpp src/Shader.h)
-target_link_libraries(LearnOpenGL PUBLIC opengl32 glfw glad)
-
-configure_file(resource/shader/vertex_shader.glsl build/vertex_shader.glsl COPYONLY)
-configure_file(resource/shader/fragment_shader.glsl build/fragment_shader.glsl COPYONLY)
+# run setup.py before building
+add_custom_target(
+        setup ALL
+        COMMAND python setup.py
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Setting up resources..."
+)
+add_dependencies(LearnOpenGL setup)
