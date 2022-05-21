@@ -1,8 +1,10 @@
 #version 330 core
 
-out vec4 FragColor;
+out vec4 final_color;
+
+uniform float green_value;
 
 void main()
 {
-    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+    final_color = vec4(0.0, green_value, 0.0, 1.0);
 }

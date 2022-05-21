@@ -21,7 +21,7 @@ void Shader::init_shader(const unsigned shader_id, const string &path) const {
     glGetShaderiv(shader_id, GL_COMPILE_STATUS, &success);
     if (!success) {
         char info_log[512];
-        glGetShaderInfoLog(vertex_shader_id, 512, nullptr, info_log);
+        glGetShaderInfoLog(shader_id, 512, nullptr, info_log);
         throw std::runtime_error(info_log);
     }
 }
@@ -65,6 +65,26 @@ unsigned int Shader::get_vertex_shader_id() const {
 
 unsigned int Shader::get_program_id() const {
     return this->program_id;
+}
+
+void Shader::set_uniform(const string &name, float value) {
+    glUniform1f(glGetUniformLocation(this->program_id, name.c_str()), value);
+}
+
+void Shader::set_uniform(const string &name, int value) {
+    glUniform1i(glGetUniformLocation(this->program_id, name.c_str()), value);
+}
+
+void Shader::set_uniform(const string &name, unsigned int value) {
+    glUniform1ui(glGetUniformLocation(this->program_id, name.c_str()), value);
+}
+
+void Shader::set_uniform(const string &name, float v1, float v2, float v3) {
+    glUniform3f(glGetUniformLocation(this->program_id, name.c_str()), v1, v2, v3);
+}
+
+void Shader::set_uniform(const string &name, float v1, float v2, float v3, float v4) {
+    glUniform4f(glGetUniformLocation(this->program_id, name.c_str()), v1, v2, v3, v4);
 }
 
 

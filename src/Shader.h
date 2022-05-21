@@ -30,6 +30,12 @@ public:
     unsigned int get_vertex_shader_id() const;
     unsigned int get_program_id() const;
     unsigned int get_fragment_shader_id() const;
+
+    void set_uniform(const string &name, float value);
+    void set_uniform(const string &name, int value);
+    void set_uniform(const string &name, unsigned int value);
+    void set_uniform(const string &name, float v1, float v2, float v3);
+    void set_uniform(const string &name, float v1, float v2, float v3, float v4);
 };
 
 
