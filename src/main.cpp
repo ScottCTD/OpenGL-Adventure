@@ -88,14 +88,66 @@ int main() {
     // vertex data and VBO
     float vertices[] = {
             // 3 positions,                2 tex coords
-            -0.5, -0.5, 0.0, 0.0, 0.0, // left bottom
-            -0.5, 0.5, 0.0, 0.0, 1.0,// left top
-            0.5, 0.5, 0.0, 1.0, 1.0,// right top
-            0.5, -0.5, 0.0, 1.0, 0.0,// right bottom
+            // front
+            -0.5, -0.5, 0.5, 0.0, 0.0, // left bottom
+            -0.5, 0.5, 0.5, 0.0, 1.0, // left top
+            0.5, 0.5, 0.5, 1.0, 1.0, // right top
+            0.5, -0.5, 0.5, 1.0, 0.0, // right bottom
+
+            // back
+            -0.5, -0.5, -0.5, 0.0, 0.0, // left bottom
+            -0.5, 0.5, -0.5, 0.0, 1.0, // left top
+            0.5, 0.5, -0.5, 1.0, 1.0, // right top
+            0.5, -0.5, -0.5, 1.0, 0.0, // right bottom
+
+            // left
+            -0.5, -0.5, -0.5, 0.0, 0.0, // left bottom
+            -0.5, 0.5, -0.5, 0.0, 1.0, // left top
+            -0.5, 0.5, 0.5, 1.0, 1.0, // right top
+            -0.5, -0.5, 0.5, 1.0, 0.0, // right bottom
+
+            // right
+            0.5, -0.5, 0.5, 0.0, 0.0, // left bottom
+            0.5, 0.5, 0.5, 0.0, 1.0, // left top
+            0.5, 0.5, -0.5, 1.0, 1.0, // right top
+            0.5, -0.5, -0.5, 1.0, 0.0, // right bottom
+
+            // top
+            -0.5, 0.5, 0.5, 0.0, 0.0, // left bottom
+            -0.5, 0.5, -0.5, 0.0, 1.0, // left top
+            0.5, 0.5, -0.5, 1.0, 1.0, // right top
+            0.5, 0.5, 0.5, 1.0, 0.0, // right bottom
+
+            // bottom
+            -0.5, -0.5, 0.5, 0.0, 0.0, // left bottom
+            -0.5, -0.5, -0.5, 0.0, 1.0, // left top
+            0.5, -0.5, -0.5, 1.0, 1.0, // right top
+            0.5, -0.5, 0.5, 1.0, 0.0, // right bottom
     };
     unsigned indices[] = {
+            // front
             0, 1, 2,
-            0, 2, 3
+            0, 2, 3,
+
+            // back
+            4, 5, 6,
+            4, 6, 7,
+
+            // left
+            8, 9, 10,
+            8, 10, 11,
+
+            // right
+            12, 13, 14,
+            12, 14, 15,
+
+            // top
+            16, 17, 18,
+            16, 18, 19,
+
+            // botom
+            20, 21, 22,
+            20, 22, 23,
     };
     // our first vertex buffer object
     unsigned vbo_id;
@@ -124,31 +176,34 @@ int main() {
     shader.set_uniform("texture0", 0);
     shader.set_uniform("texture1", 1);
 
-    glm::mat4 transform_matrix(1.0);
-    shader.set_uniform("transform_matrix", transform_matrix);
+    glm::mat4 model_matrix(1.0), view_matrix(1.0), projection_matrix(
+            glm::perspective(glm::radians(45.0F), static_cast<float>(WINDOW_WIDTH) / WINDOW_HEIGHT,
+                             0.1F, 100.0F));
+    model_matrix = glm::rotate(model_matrix, glm::radians(-30.0F), glm::vec3(1.0, 0.0, 0.0));
+    view_matrix = glm::translate(view_matrix, glm::vec3(0.0F, 0.0F, -3.0F));
 
+    shader.set_uniform("model_matrix", model_matrix);
+    shader.set_uniform("view_matrix", view_matrix);
+    shader.set_uniform("projection_matrix", projection_matrix);
+
+    glEnable(GL_DEPTH_TEST);
     // the render loop
     while (!glfwWindowShouldClose(window)) {
         // process inputs
         process_inputs(window);
 
         glClearColor(0.2F, 0.3F, 0.3F, 1.0F);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader.use();;
         texture1.bind(GL_TEXTURE0);
         texture2.bind(GL_TEXTURE1);
-
-        // some random transformations
-        auto time = glfwGetTime();
-        auto angle = static_cast<float>(sin(time) + 1);
-        transform_matrix = glm::rotate(transform_matrix, glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
-        shader.set_uniform("transform_matrix", transform_matrix);
-
+        model_matrix = glm::rotate(model_matrix, glm::radians(-0.5F), glm::vec3(0.0, 1.0, 0.0));
+        shader.set_uniform("model_matrix", model_matrix);
         glBindVertexArray(vao_id);
         // primitive, the starting index of the vertex array, number of vertices
         // glDrawArrays(GL_TRIANGLES, 0, 6);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
         // swap the double buffer
         glfwSwapBuffers(window);
