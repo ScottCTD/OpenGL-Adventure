@@ -3,6 +3,9 @@
 #include <iostream>
 #include <cmath>
 #include <stb_image.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Shader.h"
 #include "Texture2D.h"
@@ -121,6 +124,9 @@ int main() {
     shader.set_uniform("texture0", 0);
     shader.set_uniform("texture1", 1);
 
+    glm::mat4 transform_matrix(1.0);
+    shader.set_uniform("transform_matrix", transform_matrix);
+
     // the render loop
     while (!glfwWindowShouldClose(window)) {
         // process inputs
@@ -132,6 +138,13 @@ int main() {
         shader.use();;
         texture1.bind(GL_TEXTURE0);
         texture2.bind(GL_TEXTURE1);
+
+        // some random transformations
+        auto time = glfwGetTime();
+        auto angle = static_cast<float>(sin(time) + 1);
+        transform_matrix = glm::rotate(transform_matrix, glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
+        shader.set_uniform("transform_matrix", transform_matrix);
+
         glBindVertexArray(vao_id);
         // primitive, the starting index of the vertex array, number of vertices
         // glDrawArrays(GL_TRIANGLES, 0, 6);

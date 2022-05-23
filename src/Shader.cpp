@@ -67,24 +67,29 @@ unsigned int Shader::get_program_id() const {
     return this->id;
 }
 
-void Shader::set_uniform(const string &name, float value) {
+void Shader::set_uniform(const string &name, float value) const {
     glUniform1f(glGetUniformLocation(this->id, name.c_str()), value);
 }
 
-void Shader::set_uniform(const string &name, int value) {
+void Shader::set_uniform(const string &name, int value) const {
     glUniform1i(glGetUniformLocation(this->id, name.c_str()), value);
 }
 
-void Shader::set_uniform(const string &name, unsigned int value) {
+void Shader::set_uniform(const string &name, unsigned int value) const {
     glUniform1ui(glGetUniformLocation(this->id, name.c_str()), value);
 }
 
-void Shader::set_uniform(const string &name, float v1, float v2, float v3) {
+void Shader::set_uniform(const string &name, float v1, float v2, float v3) const {
     glUniform3f(glGetUniformLocation(this->id, name.c_str()), v1, v2, v3);
 }
 
-void Shader::set_uniform(const string &name, float v1, float v2, float v3, float v4) {
+void Shader::set_uniform(const string &name, float v1, float v2, float v3, float v4) const {
     glUniform4f(glGetUniformLocation(this->id, name.c_str()), v1, v2, v3, v4);
+}
+
+void Shader::set_uniform(const string &name, const glm::mat4 &value, GLboolean transpose) const{
+    glUniformMatrix4fv(glGetUniformLocation(this->id, name.c_str()), 1, transpose,
+                       glm::value_ptr(value));
 }
 
 

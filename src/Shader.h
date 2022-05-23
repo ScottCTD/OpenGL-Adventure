@@ -9,6 +9,8 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 using std::string;
 using std::ifstream;
@@ -31,11 +33,12 @@ public:
     unsigned int get_program_id() const;
     unsigned int get_fragment_shader_id() const;
 
-    void set_uniform(const string &name, float value);
-    void set_uniform(const string &name, int value);
-    void set_uniform(const string &name, unsigned int value);
-    void set_uniform(const string &name, float v1, float v2, float v3);
-    void set_uniform(const string &name, float v1, float v2, float v3, float v4);
+    void set_uniform(const string &name, float value) const;
+    void set_uniform(const string &name, int value) const;
+    void set_uniform(const string &name, unsigned int value) const;
+    void set_uniform(const string &name, float v1, float v2, float v3) const;
+    void set_uniform(const string &name, float v1, float v2, float v3, float v4) const;
+    void set_uniform(const string &name, const glm::mat4 &value, GLboolean transpose = false) const;
 };
 
 
