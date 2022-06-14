@@ -39,10 +39,10 @@ void Camera::process_keyboard_input(CameraMovement movement, float delta_time) {
             this->position += this->right * speed;
             break;
         case UP:
-            this->position += this->up * speed;
+            this->position += this->world_up * speed;
             break;
         case DOWN:
-            this->position -= this->up * speed;
+            this->position -= this->world_up * speed;
             break;
         default:
             break;

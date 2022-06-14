@@ -236,20 +236,143 @@ unsigned int init_crosshair_vao() {
     return vao;
 }
 
-int main() {
+unsigned int init_light_source_vao() {
+    unsigned vao_id;
+    glGenVertexArrays(1, &vao_id);
+    glBindVertexArray(vao_id);
+    float vertices[] = {
+            -0.5, -0.5, 0.5,
+            -0.5, 0.5, 0.5,
+            0.5, 0.5, 0.5,
+            -0.5, -0.5, 0.5,
+            0.5, 0.5, 0.5,
+            0.5, -0.5, 0.5,
+            -0.5, -0.5, -0.5,
+            -0.5, 0.5, -0.5,
+            0.5, 0.5, -0.5,
+            -0.5, -0.5, -0.5,
+            0.5, 0.5, -0.5,
+            0.5, -0.5, -0.5,
+            -0.5, -0.5, -0.5,
+            -0.5, 0.5, -0.5,
+            -0.5, 0.5, 0.5,
+            -0.5, -0.5, -0.5,
+            -0.5, 0.5, 0.5,
+            -0.5, -0.5, 0.5,
+            0.5, -0.5, 0.5,
+            0.5, 0.5, 0.5,
+            0.5, 0.5, -0.5,
+            0.5, -0.5, 0.5,
+            0.5, 0.5, -0.5,
+            0.5, -0.5, -0.5,
+            -0.5, 0.5, 0.5,
+            -0.5, 0.5, -0.5,
+            0.5, 0.5, -0.5,
+            -0.5, 0.5, 0.5,
+            0.5, 0.5, -0.5,
+            0.5, 0.5, 0.5,
+            -0.5, -0.5, 0.5,
+            -0.5, -0.5, -0.5,
+            0.5, -0.5, -0.5,
+            -0.5, -0.5, 0.5,
+            0.5, -0.5, -0.5,
+            0.5, -0.5, 0.5,
+    };
+    unsigned vbo_id;
+    glGenBuffers(1, &vbo_id);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), static_cast<void *>(0));
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+    return vao_id;
+}
 
+unsigned int init_lighting_cube_vao() {
+    unsigned vao_id;
+    glGenVertexArrays(1, &vao_id);
+    glBindVertexArray(vao_id);
+    float vertices[] = {
+            // front
+            -0.5, -0.5, 0.5, 0.0, 0.0, 1.0,
+            -0.5, 0.5, 0.5, 0.0, 0.0, 1.0,
+            0.5, 0.5, 0.5, 0.0, 0.0, 1.0,
+            -0.5, -0.5, 0.5, 0.0, 0.0, 1.0,
+            0.5, 0.5, 0.5, 0.0, 0.0, 1.0,
+            0.5, -0.5, 0.5, 0.0, 0.0, 1.0,
+            // back
+            -0.5, -0.5, -0.5, 0.0, 0.0, -1.0,
+            -0.5, 0.5, -0.5, 0.0, 0.0, -1.0,
+            0.5, 0.5, -0.5, 0.0, 0.0, -1.0,
+            -0.5, -0.5, -0.5, 0.0, 0.0, -1.0,
+            0.5, 0.5, -0.5, 0.0, 0.0, -1.0,
+            0.5, -0.5, -0.5, 0.0, 0.0, -1.0,
+            // left
+            -0.5, -0.5, -0.5, -1.0, 0.0, 0.0,
+            -0.5, 0.5, -0.5, -1.0, 0.0, 0.0,
+            -0.5, 0.5, 0.5, -1.0, 0.0, 0.0,
+            -0.5, -0.5, -0.5, -1.0, 0.0, 0.0,
+            -0.5, 0.5, 0.5, -1.0, 0.0, 0.0,
+            -0.5, -0.5, 0.5, -1.0, 0.0, 0.0,
+            // right
+            0.5, -0.5, 0.5, 1.0, 0.0, 0.0,
+            0.5, 0.5, 0.5, 1.0, 0.0, 0.0,
+            0.5, 0.5, -0.5, 1.0, 0.0, 0.0,
+            0.5, -0.5, 0.5, 1.0, 0.0, 0.0,
+            0.5, 0.5, -0.5, 1.0, 0.0, 0.0,
+            0.5, -0.5, -0.5, 1.0, 0.0, 0.0,
+            // top
+            -0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
+            -0.5, 0.5, -0.5, 0.0, 1.0, 0.0,
+            0.5, 0.5, -0.5, 0.0, 1.0, 0.0,
+            -0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
+            0.5, 0.5, -0.5, 0.0, 1.0, 0.0,
+            0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
+            // bottom
+            -0.5, -0.5, 0.5, 0.0, -1.0, 0.0,
+            -0.5, -0.5, -0.5, 0.0, -1.0, 0.0,
+            0.5, -0.5, -0.5, 0.0, -1.0, 0.0,
+            -0.5, -0.5, 0.5, 0.0, -1.0, 0.0,
+            0.5, -0.5, -0.5, 0.0, -1.0, 0.0,
+            0.5, -0.5, 0.5, 0.0, -1.0, 0.0,
+    };
+    unsigned vbo_id;
+    glGenBuffers(1, &vbo_id);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), static_cast<void *>(0));
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) (3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+    return vao_id;
+}
+
+int main() {
     auto *window = initialize();
 
     // matrices
     glm::mat4 projection_matrix(glm::perspective(glm::radians(45.0F),
                                                  static_cast<float>(WINDOW_WIDTH) / WINDOW_HEIGHT,
-                                                 0.1F, 100.0F));
+                                                 0.1F, 300.0F));
     glm::mat4 view_matrix = camera.get_view_matrix();
 
     // crosshair
     Shader crosshair_shader("resource/shader/crosshair_vertex_shader.glsl",
                             "resource/shader/crosshair_fragment_shader.glsl");
     unsigned crosshair_vao = init_crosshair_vao();
+
+    // coordinate line
+    Shader coordinate_shader("resource/shader/line_vertex_shader.glsl",
+                             "resource/shader/line_fragment_shader.glsl");
+    glm::mat4 line_model_matrix = glm::scale(glm::mat4(1.0F), glm::vec3(10000.0F));
+    coordinate_shader.use();
+    coordinate_shader.set_uniform("model_matrix", line_model_matrix);
+    coordinate_shader.set_uniform("view_matrix", view_matrix);
+    coordinate_shader.set_uniform("projection_matrix", projection_matrix);
+    unsigned coordinate_vao = init_coordinates_vao();
 
     // cube initialization
     Texture2D cube_texture1("resource/texture/grass_block_side.png");
@@ -267,15 +390,29 @@ int main() {
     cube_shader.set_uniform("projection_matrix", projection_matrix);
     unsigned cube_vao = init_cube_vao();
 
-    // coordinate line
-    Shader coordinate_shader("resource/shader/line_vertex_shader.glsl",
-                             "resource/shader/line_fragment_shader.glsl");
-    glm::mat4 line_model_matrix = glm::scale(glm::mat4(1.0F), glm::vec3(10000.0F));
-    coordinate_shader.use();
-    coordinate_shader.set_uniform("model_matrix", line_model_matrix);
-    coordinate_shader.set_uniform("view_matrix", view_matrix);
-    coordinate_shader.set_uniform("projection_matrix", projection_matrix);
-    unsigned coordinate_vao = init_coordinates_vao();
+    // light source
+    Shader light_source_shader("resource/shader/cube_vertex_shader.glsl",
+                              "resource/shader/light_source_fragment_shader.glsl");
+    light_source_shader.use();
+    glm::vec3 light_source_position = glm::vec3(2.0F, 3.0F, -10.0F);
+    glm::mat4 light_source_model_matrix = glm::translate(glm::mat4(1.0F), light_source_position);
+    light_source_shader.set_uniform("model_matrix", light_source_model_matrix);
+    light_source_shader.set_uniform("view_matrix", view_matrix);
+    light_source_shader.set_uniform("projection_matrix", projection_matrix);
+    unsigned light_source_vao = init_light_source_vao();
+
+    // lighting object
+    Shader lighting_cube_shader("resource/shader/lighting_cube_vertex_shader.glsl",
+                              "resource/shader/lighting_cube_fragment_shader.glsl");
+    lighting_cube_shader.use();
+    glm::mat4 lighting_cube_model_matrix = glm::translate(cube_model_matrix, glm::vec3(0, 0, 0));
+    lighting_cube_shader.set_uniform("model_matrix", lighting_cube_model_matrix); //glm::mat4(1.0F)
+    lighting_cube_shader.set_uniform("view_matrix", view_matrix);
+    lighting_cube_shader.set_uniform("projection_matrix", projection_matrix);
+    lighting_cube_shader.set_uniform("light_color", 1.0F, 1.0F, 1.0F);
+    lighting_cube_shader.set_uniform("object_color", 1.0F, 0.5F, 0.31F);
+    lighting_cube_shader.set_uniform("light_position", light_source_position);
+    unsigned lighting_cube_vao = init_lighting_cube_vao();
 
     glEnable(GL_DEPTH_TEST);
     // the render loop
@@ -287,29 +424,45 @@ int main() {
         auto current_time = static_cast<float>(glfwGetTime());
         delta_time = current_time - last_frame_time;
         last_frame_time = current_time;
-        std::cout << "FPS: " << 1 / delta_time << std::endl;
+//        std::cout << "FPS: " << 1 / delta_time << std::endl;
         // process inputs
         process_inputs(window);
         // update view matrix
         view_matrix = camera.get_view_matrix();
 
+        // light source
+        light_source_shader.use();
+        light_source_shader.set_uniform("view_matrix", view_matrix);
+        glm::vec3 translation = glm::vec3(static_cast<float>(sin(glfwGetTime())) * 30, 0.0, 0.0);
+        glm::mat4 model_matrix = glm::translate(light_source_model_matrix, translation);
+        light_source_shader.set_uniform("model_matrix", model_matrix);
+        glBindVertexArray(light_source_vao);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        // lighting cube
+        lighting_cube_shader.use();
+        lighting_cube_shader.set_uniform("view_matrix", view_matrix);
+        lighting_cube_shader.set_uniform("light_position", light_source_position + translation);
+        lighting_cube_shader.set_uniform("view_position", camera.position);
+        for (int i = 0; i != 5; ++i) {
+            glm::mat4 temp_matrix = glm::translate(lighting_cube_model_matrix, vec3(i, i, i));
+            lighting_cube_shader.set_uniform("model_matrix", temp_matrix);
+            glm::mat3 normal_matrix = glm::mat3(glm::transpose(glm::inverse(temp_matrix)));
+            lighting_cube_shader.set_uniform("normal_matrix", normal_matrix);
+            glBindVertexArray(lighting_cube_vao);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
+
+        // render cube
+//        cube_shader.use();;
+//        cube_shader.set_uniform("view_matrix", view_matrix);
+//        glBindVertexArray(cube_vao);
+//        glDrawArrays(GL_TRIANGLES, 0, 36);
+
         // crosshair
         crosshair_shader.use();
         glBindVertexArray(crosshair_vao);
         glDrawArrays(GL_LINES, 0, 4);
-
-        // render cube
-        cube_shader.use();;
-        cube_shader.set_uniform("view_matrix", view_matrix);
-        for (int i = 0; i != 16; ++i) {
-            for (int j = 0; j != 16; ++j) {
-                auto temp_model_matrix = glm::translate(cube_model_matrix, glm::vec3(i, 0, j));
-                cube_shader.set_uniform("model_matrix", temp_model_matrix);
-                glBindVertexArray(cube_vao);
-                glDrawArrays(GL_TRIANGLES, 0, 36);
-            }
-        }
-
         // render coordinate
         coordinate_shader.use();
         coordinate_shader.set_uniform("view_matrix", view_matrix);

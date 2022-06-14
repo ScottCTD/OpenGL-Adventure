@@ -16,6 +16,10 @@ using std::string;
 using std::ifstream;
 using std::ostringstream;
 
+using glm::mat4;
+using glm::mat3;
+using glm::vec3;
+
 class Shader {
 
 private:
@@ -38,7 +42,9 @@ public:
     void set_uniform(const string &name, unsigned int value) const;
     void set_uniform(const string &name, float v1, float v2, float v3) const;
     void set_uniform(const string &name, float v1, float v2, float v3, float v4) const;
-    void set_uniform(const string &name, const glm::mat4 &value, GLboolean transpose = false) const;
+    void set_uniform(const string &name, const mat4 &value, GLboolean transpose = false) const;
+    void set_uniform(const string &name, const mat3 &value, GLboolean transpose = false) const;
+    void set_uniform(const string &name, const vec3 &value) const;
 };
 
 
