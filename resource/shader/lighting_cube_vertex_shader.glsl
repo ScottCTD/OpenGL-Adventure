@@ -13,8 +13,8 @@ uniform mat3 normal_matrix;
 
 void main()
 {
-    // transform the normal vector to the world space
-    normal = normal_matrix * in_normal;
+    // transform the normal vector to the view space
+    normal = normalize(normal_matrix * in_normal);
     position = vec3(model_matrix * vec4(in_pos, 1.0));
     gl_Position = projection_matrix * view_matrix * model_matrix * vec4(in_pos, 1.0);
 }
